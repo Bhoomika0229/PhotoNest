@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>PhotoBooth</title>
+
+<style>
+/* ---------- GLOBAL ---------- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(-45deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #f5576c 75%, #4facfe 100%);
+    background-size: 400% 400%;
+    animation: gradientShift 15s ease infinite;
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+/* Floating particles */
+.particles {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.particle {
+    position: absolute;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 50%;
+    animation: float 8s infinite linear;
+}
+
+@keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+@keyframes float {
+    0% { transform: translateY(100vh) scale(0) rotate(0deg); opacity: 0; }
+    10% { opacity: 1; transform: translateY(90vh) scale(1); }
+    90% { opacity: 1; }
+    100% { transform: translateY(-20vh) scale(1.2) rotate(720deg); opacity: 0; }
+}
+
+/* ---------- NAVBAR ---------- */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 25px 60px;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.25);
+    animation: slideDown 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    position: relative;
+    z-index: 20;
+}
+
+.logo {
+    font-size: 32px;
+    font-weight: 900;
+    background: linear-gradient(135deg, #fff, #f8f8f8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    letter-spacing: -1px;
+}
+
+.nav-links {
+    display: flex;
+    align-items: center;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: rgba(255, 255, 255, 0.95);
+    font-weight: 600;
+    font-size: 17px;
+    margin-left: 35px;
+    padding: 12px 28px;
+    border-radius: 30px;
+    backdrop-filter: blur(12px);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    position: relative;
+    overflow: hidden;
+}
+
+.nav-links a::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+.nav-links a:hover::before {
+    width: 300px;
+    height: 300px;
+}
+
+.nav-links a:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: translateY(-5px) scale(1.05);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+}
+
+@keyframes slideDown {
+    from { 
+        transform: translateY(-120%) scale(0.95); 
+        opacity: 0; 
+    }
+    to { 
+        transform: translateY(0) scale(1); 
+        opacity: 1; 
+    }
+}
+
+/* ---------- HERO ---------- */
+.hero {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: calc(100vh - 120px);
+    text-align: center;
+    padding: 0 40px;
+    position: relative;
+    z-index: 10;
+    animation: heroRise 2s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.3s both;
+}
+
+.hero-content {
+    max-width: 800px;
+    animation: fadeInUp 1.8s ease-out 0.5s both;
+}
+
+.hero h1 {
+    font-size: clamp(42px, 8vw, 68px);
+    font-weight: 900;
+    background: linear-gradient(135deg, #fff 0%, #f8f8f8 50%, rgba(255,255,255,0.8) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 25px;
+    line-height: 1.1;
+    text-shadow: 0 8px 30px rgba(0,0,0,0.2);
+    letter-spacing: -2px;
+}
+
+.hero p {
+    font-size: clamp(18px, 3vw, 24px);
+    color: rgba(255, 255, 255, 0.95);
+    margin-bottom: 50px;
+    font-weight: 400;
+    line-height: 1.6;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* ---------- HERO BUTTON ---------- */
+.hero-btn {
+    display: inline-block;
+    padding: 22px 55px;
+    font-size: 20px;
+    font-weight: 700;
+    border: none;
+    border-radius: 50px;
+    background: linear-gradient(135deg, #ff6b6b, #feca57, #ff9ff3, #54a0ff);
+    background-size: 400% 400%;
+    color: white;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    position: relative;
+    overflow: hidden;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    box-shadow: 0 20px 45px rgba(255, 107, 107, 0.4);
+    animation: heroPulse 3s infinite ease-in-out;
+}
+
+.hero-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+    transition: left 0.7s;
+}
+
+.hero-btn:hover::before {
+    left: 100%;
+}
+
+.hero-btn:hover {
+    transform: translateY(-12px) scale(1.08);
+    box-shadow: 0 30px 60px rgba(84, 160, 255, 0.5);
+    background-position: 100% 0;
+    animation: none;
+}
+
+.hero-btn:active {
+    transform: translateY(-6px) scale(1.03);
+}
+
+@keyframes heroPulse {
+    0%, 100% { 
+        box-shadow: 0 20px 45px rgba(255, 107, 107, 0.4);
+        transform: scale(1);
+    }
+    50% { 
+        box-shadow: 0 25px 55px rgba(254, 202, 87, 0.6);
+        transform: scale(1.02);
+    }
+}
+
+@keyframes heroRise {
+    from { 
+        transform: scale(0.8) translateY(50px); 
+        opacity: 0; 
+    }
+    to { 
+        transform: scale(1) translateY(0); 
+        opacity: 1; 
+    }
+}
+
+@keyframes fadeInUp {
+    from { 
+        opacity: 0; 
+        transform: translateY(60px); 
+    }
+    to { 
+        opacity: 1; 
+        transform: translateY(0); 
+    }
+}
+
+/* ---------- RESPONSIVE ---------- */
+@media (max-width: 1024px) {
+    .navbar {
+        padding: 20px 40px;
+    }
+    
+    .nav-links a {
+        margin-left: 25px;
+        padding: 10px 22px;
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 768px) {
+    .navbar {
+        padding: 18px 25px;
+        flex-direction: column;
+        gap: 20px;
+    }
+    
+    .nav-links {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    
+    .nav-links a {
+        margin: 5px 15px;
+        padding: 12px 25px;
+        font-size: 16px;
+    }
+    
+    .hero {
+        min-height: calc(100vh - 100px);
+        padding: 0 25px;
+    }
+    
+    .hero-btn {
+        padding: 20px 45px;
+        font-size: 18px;
+        min-width: 280px;
+    }
+}
+
+@media (max-width: 480px) {
+    .logo {
+        font-size: 26px;
+    }
+    
+    .nav-links a {
+        margin: 4px 10px;
+        padding: 10px 20px;
+        font-size: 15px;
+    }
+    
+    .hero h1 {
+        letter-spacing: -1px;
+    }
+    
+    .hero p {
+        font-size: 16px;
+    }
+}
+</style>
+</head>
+
+<body>
+<!-- ✨ Floating Particles -->
+<div class="particles" id="particles"></div>
+
+<!-- 🔝 NAVBAR -->
+<div class="navbar">
+    <div class="logo">📸 PhotoBooth</div>
+    
+    <div class="nav-links">
+        {% if user.is_authenticated %}
+            <a href="/gallery/">🖼️ Gallery</a>
+            <a href="/logout/">🚪 Logout</a>
+        {% else %}
+            <a href="/login/">🔐 Login</a>
+            <a href="/signup/">✨ Signup</a>
+        {% endif %}
+    </div>
+</div>
+
+<!-- 🌟 HERO SECTION -->
+<div class="hero">
+    <div class="hero-content">
+        <h1>Capture Your Moments ✨</h1>
+        <p>Turn everyday memories into stunning photographs with magical ease</p>
+        
+        {% if user.is_authenticated %}
+            <a href="/capture/">
+                <button class="hero-btn">📸 Start Capturing</button>
+            </a>
+        {% else %}
+            <a href="/login/">
+                <button class="hero-btn">📸 Start Capturing</button>
+            </a>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+// Enhanced floating particles
+function createParticles() {
+    const particlesContainer = document.getElementById('particles');
+    for (let i = 0; i < 35; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+        particle.style.left = Math.random() * 100 + '%';
+        particle.style.width = particle.style.height = (Math.random() * 12 + 3) + 'px';
+        particle.style.animationDelay = Math.random() * 8 + 's';
+        particle.style.animationDuration = (Math.random() * 5 + 6) + 's';
+        particle.style.background = `hsl(${Math.random() * 60 + 200}, 70%, 70%)`;
+        particlesContainer.appendChild(particle);
+    }
+}
+
+// Mouse parallax effect for particles
+document.addEventListener('mousemove', (e) => {
+    const particles = document.querySelectorAll('.particle');
+    const mouseX = e.clientX / window.innerWidth;
+    const mouseY = e.clientY / window.innerHeight;
+    
+    particles.forEach((particle, index) => {
+        const speed = (index % 5) * 0.02;
+        particle.style.transform += ` translate(${mouseX * speed * 20}px, ${mouseY * speed * 20}px)`;
+    });
+});
+
+createParticles();
+
+// Preload animations
+window.addEventListener('load', () => {
+    document.body.style.opacity = '0';
+    document.body.style.transition = 'opacity 0.8s ease';
+    setTimeout(() => {
+        document.body.style.opacity = '1';
+    }, 200);
+});
+</script>
+
+</body>
+</html>

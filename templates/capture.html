@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Capture Photo</title>
+
+<style>
+/* ---------- GLOBAL ---------- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(-45deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #f5576c 75%, #4facfe 100%);
+    background-size: 400% 400%;
+    animation: gradientShift 15s ease infinite;
+    min-height: 100vh;
+    overflow: hidden;
+}
+
+/* Floating particles animation */
+.particles {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.particle {
+    position: absolute;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    animation: float 6s infinite linear;
+}
+
+@keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+@keyframes float {
+    0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+    10% { opacity: 1; }
+    90% { opacity: 1; }
+    100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
+}
+
+/* ---------- NAVBAR ---------- */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 60px;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    animation: slideDown 1s ease-out;
+    position: relative;
+    z-index: 10;
+}
+
+.logo {
+    font-size: 28px;
+    font-weight: 800;
+    background: linear-gradient(135deg, #fff, #f0f0f0);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.navbar a {
+    text-decoration: none;
+    color: #fff;
+    font-weight: 600;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    padding: 8px 20px;
+    border-radius: 25px;
+    backdrop-filter: blur(10px);
+}
+
+.navbar a:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+}
+
+@keyframes slideDown {
+    from { transform: translateY(-100%); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+/* ---------- CAMERA CARD ---------- */
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: calc(100vh - 100px);
+    position: relative;
+    z-index: 5;
+}
+
+.card {
+    background: rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+    padding: 50px 40px;
+    border-radius: 30px;
+    box-shadow: 0 25px 50px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.4);
+    text-align: center;
+    animation: fadeUpGlow 1.5s ease-out;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    position: relative;
+    overflow: hidden;
+}
+
+.card::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+    transform: rotate(45deg);
+    animation: shine 3s infinite;
+}
+
+@keyframes shine {
+    0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+    100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+}
+
+@keyframes fadeUpGlow {
+    from { 
+        opacity: 0; 
+        transform: translateY(50px) scale(0.95);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+    }
+    to { 
+        opacity: 1; 
+        transform: translateY(0) scale(1);
+        box-shadow: 0 25px 50px rgba(0,0,0,0.2);
+    }
+}
+
+.card h2 {
+    font-size: 32px;
+    font-weight: 700;
+    background: linear-gradient(135deg, #fff, #e0e0e0);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 30px;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+/* ---------- VIDEO ---------- */
+video {
+    width: 450px;
+    height: 340px;
+    border-radius: 25px;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+    margin-bottom: 30px;
+    transition: all 0.4s ease;
+    position: relative;
+}
+
+video:hover {
+    transform: scale(1.02);
+    box-shadow: 0 20px 45px rgba(0,0,0,0.3);
+}
+
+/* ---------- BUTTON ---------- */
+.capture-btn {
+    padding: 18px 45px;
+    font-size: 20px;
+    font-weight: 600;
+    border: none;
+    border-radius: 50px;
+    background: linear-gradient(135deg, #ff6b6b, #feca57, #ff9ff3, #54a0ff);
+    background-size: 300% 300%;
+    color: white;
+    cursor: pointer;
+    transition: all 0.4s ease;
+    position: relative;
+    overflow: hidden;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    box-shadow: 0 10px 30px rgba(255, 107, 107, 0.4);
+    animation: pulseGlow 2s infinite;
+}
+
+.capture-btn:hover {
+    transform: translateY(-8px) scale(1.05);
+    box-shadow: 0 20px 40px rgba(254, 202, 87, 0.5);
+    background-position: 100% 0;
+}
+
+.capture-btn:active {
+    transform: translateY(-4px) scale(1.02);
+    animation: none;
+}
+
+.capture-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+    transition: left 0.5s;
+}
+
+.capture-btn:hover::before {
+    left: 100%;
+}
+
+@keyframes pulseGlow {
+    0%, 100% { box-shadow: 0 10px 30px rgba(255, 107, 107, 0.4); }
+    50% { box-shadow: 0 10px 30px rgba(254, 202, 87, 0.6); }
+}
+
+/* ---------- RESPONSIVE ---------- */
+@media(max-width: 768px) {
+    .navbar {
+        padding: 16px 30px;
+    }
+    
+    .logo {
+        font-size: 24px;
+    }
+    
+    video {
+        width: 100%;
+        max-width: 400px;
+        height: auto;
+        aspect-ratio: 4/3;
+    }
+    
+    .card {
+        margin: 20px;
+        padding: 30px 25px;
+    }
+    
+    .capture-btn {
+        padding: 16px 35px;
+        font-size: 18px;
+    }
+}
+
+@media(max-width: 480px) {
+    .container {
+        height: calc(100vh - 80px);
+    }
+    
+    .card h2 {
+        font-size: 26px;
+    }
+}
+</style>
+</head>
+
+<body>
+<!-- Floating Particles -->
+<div class="particles" id="particles"></div>
+
+<!-- 🔝 NAVBAR -->
+<div class="navbar">
+    <div class="logo">📸 PhotoBooth</div>
+    <a href="/">🏠 Home</a>
+</div>
+
+<!-- 📷 CAMERA SECTION -->
+<div class="container">
+    <div class="card">
+        <h2>Strike a Pose!</h2>
+
+        <video id="video" autoplay playsinline></video>
+        <canvas id="canvas" width="450" height="340" style="display:none;"></canvas>
+
+        <form method="post" onsubmit="return captureAndSubmit()">
+            {% csrf_token %}
+            <input type="hidden" name="image" id="image">
+            <button class="capture-btn" type="submit">✨ Capture Magic ✨</button>
+        </form>
+    </div>
+</div>
+
+<script>
+// Create floating particles
+function createParticles() {
+    const particlesContainer = document.getElementById('particles');
+    for (let i = 0; i < 20; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+        particle.style.left = Math.random() * 100 + '%';
+        particle.style.width = particle.style.height = (Math.random() * 6 + 2) + 'px';
+        particle.style.animationDelay = Math.random() * 6 + 's';
+        particle.style.animationDuration = (Math.random() * 3 + 4) + 's';
+        particlesContainer.appendChild(particle);
+    }
+}
+
+createParticles();
+
+// CAMERA ACCESS
+const video = document.getElementById('video');
+const canvas = document.getElementById('canvas');
+const imageInput = document.getElementById('image');
+
+navigator.mediaDevices.getUserMedia({ 
+    video: { 
+        width: { ideal: 450 }, 
+        height: { ideal: 340 },
+        facingMode: 'user'
+    } 
+})
+.then(stream => {
+    video.srcObject = stream;
+    video.play();
+})
+.catch(err => {
+    console.error('Camera error:', err);
+    alert("Camera access denied or unavailable. Please allow camera access.");
+});
+
+function captureAndSubmit() {
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+    imageInput.value = canvas.toDataURL('image/png');
+    return true;
+}
+</script>
+
+</body>
+</html>
